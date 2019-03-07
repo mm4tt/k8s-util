@@ -18,6 +18,7 @@ import (
 
 var (
 	testId = flag.String("test-id", "ci-kubernetes-e2e-gce-scale-correctness/208", "Id of the test to analyze in form <name>/<run_number>")
+	nLongest = flag.Int("nLongest", 25, "Number of longest testcases to print")
 )
 
 func main() {
@@ -47,10 +48,10 @@ func main() {
 		return testcases[i].Duration > testcases[j].Duration
 	})
 
-	fmt.Println("Top 50 longest testcases")
+	fmt.Printf("Top %d longest testcases\n", *nLongest)
 	for i, tc := range testcases {
 		fmt.Println(tc)
-		if i == 50 {
+		if i == *nLongest {
 			break
 		}
 	}
