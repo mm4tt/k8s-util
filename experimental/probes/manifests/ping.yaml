@@ -1,0 +1,103 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ping-probe
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ping-probe
+  name: ping-server
+  labels:
+    app: ping-server
+spec:
+  selector:
+    matchLabels:
+      app: ping-server
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: ping-server
+    spec:
+      containers:
+        - name: ping-server
+          image: gcr.io/mmatejczyk-gke-dev/probes:v0.0.5
+          args:
+            - --metric-bind-address=0.0.0.0:8080
+            - --mode=ping-server
+            - --ping-server-bind-address=0.0.0.0:8081
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 8080
+              name: metrics
+            - containerPort: 8081
+              name: http
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ping-probe
+  name: ping-server
+  labels:
+    app: ping-server
+spec:
+
+  ports:
+    - name: metrics
+      port: 8080
+    - name: http
+      port: 8081
+  selector:
+    app: ping-server
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: ping-probe
+  name: ping-client
+  labels:
+    app: ping-client
+spec:
+  selector:
+    matchLabels:
+      app: ping-client
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: ping-client
+    spec:
+      containers:
+        - name: ping-client
+          image: gcr.io/mmatejczyk-gke-dev/probes:v0.0.5
+          args:
+            - --metric-bind-address=0.0.0.0:8080
+            - --mode=ping-client
+            - --ping-server-address=ping-server:8081
+          resources:
+            limits:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 8080
+              name: metrics
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: ping-probe
+  name: ping-client
+  labels:
+    app: ping-client
+spec:
+  ports:
+    - name: metrics
+      port: 8080
+  selector:
+    app: ping-client
