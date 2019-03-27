@@ -1,8 +1,7 @@
 #!/bin/bash
 
-N_WATCHES=5000
-
-for i in {1..N_WATCHES}
+N_WATCHES=2000
+for ((i=0; i < $N_WATCHES; i++))
 do
    kubectl get --watch endpoints --all-namespaces > /dev/null &
 done
