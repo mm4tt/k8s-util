@@ -1,6 +1,6 @@
-// junit-parser - util for fetching and analyzing junit files from k8s ci tests.
+// test-summary-parser - util for fetching and analyzing junit files from k8s ci tests.
 // Example useage:
-//   go run $GOPATH/src/github.com/mm4tt/k8s-util/test-summary-parser/test-summary-parser.go --test-id=ci-kubernetes-e2e-gce-scale-correctness/208
+//   go run $GOPATH/src/github.com/mm4tt/k8s-util/test-summary-parser/resource-usage-summary-parser.go --test-id=ci-kubernetes-e2e-gce-scale-correctness/208
 package main
 
 import (
