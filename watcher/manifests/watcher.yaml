@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: watcher
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: watcher
+  namespace: watcher
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: watcher-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: watcher
+    namespace: watcher
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: watcher
+  name: watcher
+  labels:
+    app: watcher
+spec:
+  selector:
+    matchLabels:
+      app: watcher
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: watcher
+    spec:
+      containers:
+        - name: watcher
+          image: gcr.io/mmatejczyk-gke-dev/watcher:v0.0.1
+          args:
+            - --num-watches=200
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+      serviceAccountName: watcher
+
