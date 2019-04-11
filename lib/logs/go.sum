@@ -1,8 +1,0 @@
-github.com/nhooyr/color v0.0.0-20160809023417-1121d4ef553c h1:lEdmqtMJFLIylogrqgO9OsXbdKwAgWBkZA1kE0nHuT0=
-github.com/nhooyr/color v0.0.0-20160809023417-1121d4ef553c/go.mod h1:mX+0AvcxlbfCPGoeO4TtV4HQ4EYBaoFua8SSpiaTu3k=
-github.com/nhooyr/terminfo v0.0.0-20170924023245-42dddfab2f67 h1:g7j5brdXE1AxHEbDPk/Ahd99Y7ai+y5YaX+pr/5eQqQ=
-github.com/nhooyr/terminfo v0.0.0-20170924023245-42dddfab2f67/go.mod h1:7ouMFNGb+dxJG/15OEaIUwUMruGzrFxf5acYXEEvMa8=
-golang.org/x/crypto v0.0.0-20190411141212-9732e03de32b h1:iGH65uwcvzAO6k8mHd2ESJTnQmZLhfyF+Ki7xC6N4eg=
-golang.org/x/crypto v0.0.0-20190411141212-9732e03de32b/go.mod h1:WFFai1msRO1wXaEeE5yQxYXgSfI8pQAWXbQop6sCtWE=
-golang.org/x/sys v0.0.0-20190403152447-81d4e9dc473e h1:nFYrTHrdrAOpShe27kaFHjsqYSEQ0KWqdWLu3xuZJts=
-golang.org/x/sys v0.0.0-20190403152447-81d4e9dc473e/go.mod h1:h1NjWce9XRLGQEsW7wpKNCjG9DtNlClVuFLEZdDNbEs=

@@ -1,16 +1,13 @@
 package logs
 
 import (
-	"fmt"
+	"github.com/logrusorgru/aurora"
 	"strings"
-
-	"github.com/nhooyr/color"
 )
 
 type Prettifier struct {
 	LineLengthLimit    int
 	CharsAroundPattern int
-	PatternColor       string
 }
 
 // DefaultPrettifier creates a default Prettifier.
@@ -18,7 +15,6 @@ func DefaultPrettifier() *Prettifier {
 	return &Prettifier{
 		LineLengthLimit:    300,
 		CharsAroundPattern: 50,
-		PatternColor:       "Green",
 	}
 }
 
@@ -55,11 +51,9 @@ func (p *Prettifier) Shorten(line, pattern string) string {
 	return strings.Join(ret, " ... ")
 }
 
-// Prettify prettifies the provided line. It shortens the line and colors the pattern occurences.
-func (p *Prettifier) PrettyPrint(line, pattern string) {
+// Prettify shortens the line and colors the pattern occurrences.
+func (p *Prettifier) Prettify(line, pattern string) string {
 	line = p.Shorten(line, pattern)
-	coloredPattern := fmt.Sprintf("%%h[fg%s]%s%%r", p.PatternColor, pattern)
-	line = strings.Replace(line, "%", "%%", -1)
-	line = strings.Replace(line, pattern, coloredPattern, -1)
-	color.Println(line)
+	coloredPattern := aurora.Green(pattern)
+	return strings.Replace(line, pattern, coloredPattern.String(), -1)
 }
