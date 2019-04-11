@@ -1,3 +1,5 @@
 github.com/mm4tt/k8s-util v0.0.0-20190405140054-2f5dbc92bcd8 h1:w1+t9H60oERd49OL+6zk6l8aCko4bRmGNITFqVxhF60=
+github.com/mm4tt/k8s-util/lib/logs v0.0.0-20190411140038-9cbed30d41bc h1:XovxYNBP2MMpnKpqRhsPOYuxLw1QHbKQMsGDOBPYYSo=
+github.com/mm4tt/k8s-util/lib/logs v0.0.0-20190411140038-9cbed30d41bc/go.mod h1:PCgQZnd02+bEWOYhdzGxvwKI1pN/g0rET45saMMa7b8=
 k8s.io/klog v0.2.0 h1:0ElL0OHzF3N+OhoJTL0uca20SxtYt4X4+bzHeqrB83c=
 k8s.io/klog v0.2.0/go.mod h1:Gq+BEi5rUBO/HRz0bTSXDUcqjScdoY3a9IHpCEIOOfk=
