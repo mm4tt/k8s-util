@@ -17,7 +17,7 @@ var (
 	namespace = flag.String("namespace", "", "namespace to look for in the log")
 	name      = flag.String("name", "", "name to look for in the log")
 
-	namespaceRegex, nameRegex *regexp.Regexp
+	namespaceRegex, nameRegex, stepRegex *regexp.Regexp
 )
 
 func main() {
@@ -28,6 +28,7 @@ func main() {
 
 	namespaceRegex = regexp.MustCompile(*namespace + "[^0-9]")
 	nameRegex = regexp.MustCompile(*name + "[^0-9]")
+	stepRegex = regexp.MustCompile("Step \"")
 
 	klog.Infof("Processing file: %s", *logFile)
 	if err := processLog(*logFile); err != nil {
@@ -60,12 +61,33 @@ func processLog(filePath string) error {
 
 	prettifier := logs.DefaultPrettifier()
 
+	var hasSkippedLastLine bool
+	var lastPrinted, prevLine string
+
+	fmt.Println()
+	fmt.Println()
+	fmt.Println()
 	for scanner.Scan() {
 		nLines++
-		if matchesNamespaceAndName(scanner.Bytes()) {
-			nMatched++
-			fmt.Println(prettifier.Prettify(scanner.Text(), *name))
+		if !matchesNamespaceAndName(scanner.Bytes()) {
+			if stepRegex.Match(scanner.Bytes()) {
+				fmt.Println(prettifier.Prettify(scanner.Text(), "Step"))
+			}
+			continue
 		}
+		nMatched++
+		line := scanner.Text()
+		withoutDate := line[len("I0410 02:34:51.241928"):]
+		if lastPrinted == "" || withoutDate != lastPrinted {
+			lastPrinted = withoutDate
+			if hasSkippedLastLine {
+				fmt.Println(prettifier.Prettify(prevLine, *name))
+			}
+			fmt.Println(prettifier.Prettify(line, *name))
+		} else {
+			hasSkippedLastLine = true
+		}
+		prevLine = line
 	}
 	klog.Infof("Processed %d lines, matched %d lines", nLines, nMatched)
 	if err := scanner.Err(); err != nil {
