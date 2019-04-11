@@ -48,7 +48,7 @@ func (p *Prettifier) Shorten(line, pattern string) string {
 	for _, r := range ranges2 {
 		ret = append(ret, line[r.a:r.b])
 	}
-	return strings.Join(ret, " ... ")
+	return strings.Join(ret, aurora.Red(" ... ").String())
 }
 
 // Prettify shortens the line and colors the pattern occurrences.
