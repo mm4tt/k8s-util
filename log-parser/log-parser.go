@@ -7,8 +7,8 @@ import (
 	"os"
 	"regexp"
 
-	"k8s.io/klog"
 	"github.com/mm4tt/k8s-util/lib/logs"
+	"k8s.io/klog"
 )
 
 var (
@@ -58,11 +58,13 @@ func processLog(filePath string) error {
 	scanner.Buffer(make([]byte, 1000), 100*1024*1024)
 	nLines, nMatched := 0, 0
 
+	prettifier := logs.DefaultPrettifier()
+
 	for scanner.Scan() {
 		nLines++
 		if matchesNamespaceAndName(scanner.Bytes()) {
 			nMatched++
-			fmt.Println(logs.Shorten(scanner.Text(), *name, 50))
+			fmt.Println(prettifier.Prettify(scanner.Text(), *name))
 		}
 	}
 	klog.Infof("Processed %d lines, matched %d lines", nLines, nMatched)
