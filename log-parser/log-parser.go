@@ -17,8 +17,6 @@ var (
 	namespace = flag.String("namespace", "", "namespace to look for in the log")
 	name      = flag.String("name", "", "name to look for in the log")
 
-	charsAround = flag.Int("chars-around", 50, "How many chars should be printed around pattern in long lines")
-
 	namespaceRegex, nameRegex *regexp.Regexp
 )
 
