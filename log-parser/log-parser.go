@@ -17,6 +17,8 @@ var (
 	namespace = flag.String("namespace", "", "namespace to look for in the log")
 	name      = flag.String("name", "", "name to look for in the log")
 
+	smartCompact = flag.Bool("smart-compact", true, "Wheter to compact the same log lines")
+
 	namespaceRegex, nameRegex, stepRegex *regexp.Regexp
 )
 
@@ -77,6 +79,12 @@ func processLog(filePath string) error {
 		}
 		nMatched++
 		line := scanner.Text()
+
+		if !*smartCompact {
+			fmt.Println(prettifier.Prettify(line, *name))
+			continue
+		}
+
 		withoutDate := line[len("I0410 02:34:51.241928"):]
 		if lastPrinted == "" || withoutDate != lastPrinted {
 			lastPrinted = withoutDate
