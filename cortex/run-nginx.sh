@@ -8,6 +8,6 @@ docker rm nginx 2>/dev/null || true
 docker run -d \
   --name=nginx \
   --link cortex:cortex \
-  -p 9000:9000 \
+  -p 9090:9090 \
   -v $DIR/nginx.conf:/etc/nginx/nginx.conf:ro \
   nginx:1.16.0
