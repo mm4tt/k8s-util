@@ -9,4 +9,4 @@ docker run -d \
   --name=cortex \
   -v $DIR/cortex.yaml:/etc/cortex.yaml:ro \
   -v /mnt/disks/cortex-db:/cortex-db \
-  quay.io/cortexproject/cortex -config.file=/etc/cortex.yaml
+  quay.io/cortexproject/cortex:master-88541de7 -config.file=/etc/cortex.yaml
