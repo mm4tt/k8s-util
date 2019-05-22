@@ -56,3 +56,6 @@ storage:
 
   filesystem:
     directory: /cortex-db/chunks
+
+table_manager:
+  retention_period: 6h
