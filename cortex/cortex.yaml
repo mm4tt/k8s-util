@@ -48,10 +48,10 @@ schema:
       schema: v10
       index:
         prefix: index_
-        period: 1h
+        period: 1d
       chunks:
         prefix: chunks_
-        period: 1h
+        period: 1d
 
 storage:
   boltdb:
@@ -62,4 +62,4 @@ storage:
 
 table_manager:
   retention_deletes_enabled: true
-  retention_period: 2h
+  retention_period: 30d
