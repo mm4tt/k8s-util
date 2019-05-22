@@ -48,7 +48,10 @@ schema:
       schema: v10
       index:
         prefix: index_
-        period: 168h
+        period: 1h
+      chunks:
+        prefix: chunks_
+        period: 1h
 
 storage:
   boltdb:
@@ -58,4 +61,4 @@ storage:
     directory: /cortex-db/chunks
 
 table_manager:
-  retention_period: 6h
+  retention_period: 2h
