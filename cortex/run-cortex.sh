@@ -11,4 +11,4 @@ docker run -d \
   --network=cortex-network \
   -v $DIR/cortex.yaml:/etc/cortex.yaml:ro \
   -v /mnt/disks/cortex-db:/cortex-db \
-  quay.io/cortexproject/cortex:master-88541de7 -config.file=/etc/cortex.yaml
+  quay.io/cortexproject/cortex:master-bec610fe -config.file=/etc/cortex.yaml
