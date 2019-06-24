@@ -6,15 +6,18 @@ import (
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 	"net/http"
+	"strings"
 )
 
-var fileUrl = flag.String("file-url", "https://raw.githubusercontent.com/kubernetes/test-infra/master/config/jobs/kubernetes/sig-scalability/sig-scalability-presets.yaml", "URL of the yaml file with presets to read")
+var commit = flag.String("commit", "master", "Commit to use in the fileUrl address")
+var fileUrl = flag.String("file-url", "https://raw.githubusercontent.com/kubernetes/test-infra/$commit/config/jobs/kubernetes/sig-scalability/sig-scalability-presets.yaml", "URL of the yaml file with presets to read")
 var presetName = flag.String("preset-name", "preset-e2e-scalability-common", "Name of the preset to load")
 
 func main() {
 	flag.Parse()
 
-	resp, err := http.Get(*fileUrl)
+	url := strings.ReplaceAll(*fileUrl, "$commit", *commit)
+	resp, err := http.Get(url)
 	if err != nil {	panic(err) }
 	yamlFile, err := ioutil.ReadAll(resp.Body)
 	if err != nil {	panic(err) }

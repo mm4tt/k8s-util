@@ -5,5 +5,6 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 preset_name=${1:-preset-e2e-scalability-common}
+commit=${2:-master}
 
-eval $(go run $DIR/print-common-envs.go --preset-name=$preset_name)
+eval $(go run $DIR/print-common-envs.go --preset-name=$preset_name --commit=$commit)
