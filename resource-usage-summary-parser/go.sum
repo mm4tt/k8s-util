@@ -1,2 +1,5 @@
+github.com/logrusorgru/aurora v0.0.0-20181002194514-a7b3b318ed4e/go.mod h1:7rIyQOR62GCctdiQpZ/zOJlFyk6y+94wXzv6RNZgaR4=
+github.com/mm4tt/k8s-util/lib v0.0.0-20190716151040-71aa161d842d h1:EQFuVIHM0bIe3YS8bXT8SYXvlhrRIy4DaeJRaDf4YMY=
+github.com/mm4tt/k8s-util/lib v0.0.0-20190716151040-71aa161d842d/go.mod h1:g0+p4P9LwTTenqvaInURNBf9hlVBsaHy/eKRaS7xshk=
 k8s.io/klog v0.2.0 h1:0ElL0OHzF3N+OhoJTL0uca20SxtYt4X4+bzHeqrB83c=
 k8s.io/klog v0.2.0/go.mod h1:Gq+BEi5rUBO/HRz0bTSXDUcqjScdoY3a9IHpCEIOOfk=

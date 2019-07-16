@@ -7,11 +7,12 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"k8s.io/klog"
 	"sort"
 	"strconv"
 	"strings"
+
+	"github.com/mm4tt/k8s-util/lib/reader"
 )
 
 var (
@@ -45,7 +46,7 @@ func verifyFlags() {
 }
 
 func readJson(path string) (map[string]interface{}, error) {
-	data, err := ioutil.ReadFile(path)
+	data, err := reader.Read(path)
 	if err != nil {
 		return nil, err
 	}
