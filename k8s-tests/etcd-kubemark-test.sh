@@ -43,7 +43,6 @@ export KUBE_GCE_NETWORK=${CLUSTER}
 export INSTANCE_PREFIX=${CLUSTER}
 export KUBE_GCE_INSTANCE_PREFIX=${CLUSTER}
 
-
 go run hack/e2e.go -- \
     --gcp-project=$PROJECT \
     --gcp-zone=$ZONE \
@@ -61,7 +60,7 @@ go run hack/e2e.go -- \
     --test-cmd-args=cluster-loader2 \
     --test-cmd-args=--enable-prometheus-server=true \
     --test-cmd-args=--experimental-gcp-snapshot-prometheus-disk=true \
-    --test-cmd-args=--experimental-prometheus-disk-snapshot-name="${run_name}_${num_nodes}" \
+    --test-cmd-args=--experimental-prometheus-disk-snapshot-name="${run_name}-${num_nodes}" \
     --test-cmd-args=--nodes=$num_nodes \
     --test-cmd-args=--provider=kubemark \
     --test-cmd-args=--report-dir=~/log/golang1.13/artifacts \
