@@ -52,7 +52,7 @@ go run hack/e2e.go -- \
     --gcp-nodes=83 \
     --provider=gce \
     --kubemark \
-    --kubemark-nodes=$NUM_NODES \
+    --kubemark-nodes=$num_nodes \
     --check-version-skew=false \
     --up \
     --down \
@@ -62,7 +62,7 @@ go run hack/e2e.go -- \
     --test-cmd-args=--enable-prometheus-server=true \
     --test-cmd-args=--experimental-gcp-snapshot-prometheus-disk=true \
     --test-cmd-args=--experimental-prometheus-disk-snapshot-name="${run_name}_${num_nodes}" \
-    --test-cmd-args=--nodes=$NUM_NODES \
+    --test-cmd-args=--nodes=$num_nodes \
     --test-cmd-args=--provider=kubemark \
     --test-cmd-args=--report-dir=~/log/golang1.13/artifacts \
     --test-cmd-args=--tear-down-prometheus-server=true \
