@@ -24,7 +24,7 @@ var (
 func main() {
 	flag.Parse()
 
-	tcChan := make(chan Testcase, 1000)
+	tcChan := make(chan Testcase, 10000)
 	var wg sync.WaitGroup
 
 	wg.Add(1)
@@ -66,7 +66,7 @@ func process(relativePath string, outputChan chan<- Testcase, wg *sync.WaitGroup
 	}
 	var suite xmlTestsuite
 	if err := xml.Unmarshal(data, &suite); err != nil {
-		klog.Warning(err)
+		klog.V(5).Infof("error while processing %s: %v", relativePath, err)
 		return
 	}
 	for _, tc := range suite.Testcases {
