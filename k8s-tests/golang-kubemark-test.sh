@@ -3,10 +3,10 @@
 set -e
 
 
-log() { echo $1 | ts  }
+log() { echo $1 | ts; }
 
 
-build-k8s() {
+build_k8s() {
   log "Building k8s"
 
   cd $GOPATH/src/k8s.io/kubernetes
@@ -27,9 +27,10 @@ build-k8s() {
   make quick-release | ts
 }
 
-apply-patch() {
+apply_patch() {
  cl_id=${1?}
  revision=${2?}
+
  wget https://go-review.googlesource.com/changes/go~{cl_id}/revisions/${revision}/patch?zip -O patch.zip
  unzip patch.zip && rm patch.zip
  git apply *.diff
@@ -38,8 +39,8 @@ apply-patch() {
  git commit -a -m "Applied ${cl_id} revision ${revision}"
 }
 
-build-golang() {
-  log "Building golang"
+build_golang() {
+  log "Building golang for $run_name"
 
   cd ~/golang/go/src
   git checkout master
@@ -48,7 +49,7 @@ build-golang() {
   git checkout -b ${run_name}
   git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
 
-  apply-patch 186598 3
+  apply_patch 186598 3
 
   ./make-bash | ts
 
@@ -69,8 +70,8 @@ k8s_branch=golang_kubemark_932487c7440b05
 perf_test_branch=golang1.13
 test_infra_commit=63eb09459
 
-build-golang
-build-k8s
+build_golang
+build_k8s
 
 log "Running the etcd kubemark test with ${num_nodes} nodes"
 log "k8s.io/perf-tests branch is: $perf_test_branch"
@@ -119,5 +120,4 @@ go run hack/e2e.go -- \
     --test-cmd-args=--tear-down-prometheus-server=true \
     --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
     --test-cmd-args=--testoverrides=./testing/load/kubemark/throughput_override.yaml \
-    --test-cmd-name=ClusterLoaderV2  2>&1 | ts
-
+    --test-cmd-name=ClusterLoaderV2 2>&1 | ts
