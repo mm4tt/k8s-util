@@ -74,7 +74,7 @@ test_infra_commit=63eb09459
 build_golang
 build_k8s
 
-log "Running the etcd kubemark test with ${num_nodes} nodes"
+log "Running the golang kubemark test with ${num_nodes} nodes"
 log "k8s.io/perf-tests branch is: $perf_test_branch"
 log "k8s.io/test-infra commit is: $test_infra_commit"
 
