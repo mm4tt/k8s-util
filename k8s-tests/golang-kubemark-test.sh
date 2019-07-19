@@ -46,7 +46,7 @@ build_golang() {
   git checkout master
   git pull
 
-  git branch -D ${run_name}
+  git branch -D ${run_name} || true
   git checkout -b ${run_name}
   git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
 
