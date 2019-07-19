@@ -1,7 +1,7 @@
 #!/bin/bash
 
 set -e
-
+set -E
 
 log() { echo $1 | ts; }
 
@@ -52,7 +52,7 @@ build_golang() {
 
   apply_patch 186598 3
 
-  ./make-bash | ts
+  ./make.bash | ts
 
   cd -
 }
