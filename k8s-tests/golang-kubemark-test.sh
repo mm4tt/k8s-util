@@ -2,6 +2,60 @@
 
 set -e
 
+
+log() { echo $1 | ts  }
+
+
+build-k8s() {
+  log "Building k8s"
+
+  cd $GOPATH/src/k8s.io/kubernetes
+  git checkout $k8s_branch
+
+  cd build/build-image/cross/
+  rm -rf go || true
+  cp -R ~/golang/go/ go
+
+  echo "$run_name" > VERSION
+
+  git add .
+  git commit -a -m "Update golang version for run ${run_name}"
+
+  make build | ts
+
+  cd -
+  make quick-release | ts
+}
+
+apply-patch() {
+ cl_id=${1?}
+ revision=${2?}
+ wget https://go-review.googlesource.com/changes/go~{cl_id}/revisions/${revision}/patch?zip -O patch.zip
+ unzip patch.zip && rm patch.zip
+ git apply *.diff
+ rm *.diff
+ git add .
+ git commit -a -m "Applied ${cl_id} revision ${revision}"
+}
+
+build-golang() {
+  log "Building golang"
+
+  cd ~/golang/go/src
+  git checkout master
+  git pull
+
+  git checkout -b ${run_name}
+  git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
+
+  apply-patch 186598 3
+
+  ./make-bash | ts
+
+  cd -
+}
+
+
 if [ $# -ne 2 ]
   then
     echo "Usage: ${0} <run-name> <num-node>"
@@ -66,57 +120,4 @@ go run hack/e2e.go -- \
     --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
     --test-cmd-args=--testoverrides=./testing/load/kubemark/throughput_override.yaml \
     --test-cmd-name=ClusterLoaderV2  2>&1 | ts
-
-
-log() { echo $1 | ts  }
-
-
-build-k8s() {
-  log "Building k8s"
-
-  cd $GOPATH/src/k8s.io/kubernetes
-  git checkout $k8s_branch
-
-  cd build/build-image/cross/
-  rm -rf go || true
-  cp -R ~/golang/go/ go
-
-  echo "$run_name" > VERSION
-
-  git add .
-  git commit -a -m "Update golang version for run ${run_name}"
-
-  make build | ts
-
-  cd -
-  make quick-release | ts
-}
-
-build-golang() {
-  log "Building golang"
-
-  cd ~/golang/go/src
-  git checkout master
-  git pull
-
-  git checkout -b ${run_name}
-  git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
-
-  apply-patch 186598 3
-
-  ./make-bash | ts
-
-  cd -
-}
-
-apply-patch() {
- cl_id=${1?}
- revision=${2?}
- wget https://go-review.googlesource.com/changes/go~{cl_id}/revisions/${revision}/patch?zip -O patch.zip
- unzip patch.zip && rm patch.zip
- git apply *.diff
- rm *.diff
- git add .
- git commit -a -m "Applied ${cl_id} revision ${revision}"
-}
 
