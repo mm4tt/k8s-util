@@ -31,7 +31,7 @@ apply_patch() {
  cl_id=${1?}
  revision=${2?}
 
- wget https://go-review.googlesource.com/changes/go~{cl_id}/revisions/${revision}/patch?zip -O patch.zip
+ wget https://go-review.googlesource.com/changes/go~${cl_id}/revisions/${revision}/patch?zip -O patch.zip
  unzip patch.zip && rm patch.zip
  git apply *.diff
  rm *.diff
@@ -46,6 +46,7 @@ build_golang() {
   git checkout master
   git pull
 
+  git branch -D ${run_name}
   git checkout -b ${run_name}
   git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
 
