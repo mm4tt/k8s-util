@@ -22,28 +22,28 @@ apply_patch() {
 }
 
 build_golang() {
-  echo "Building golang for $run_name, using commit: $golang_commit"
+  #echo "Building golang for $run_name, using commit: $golang_commit"
 
-  cd ~/golang/go/src
-  git checkout master
-  git pull
+  #cd ~/golang/go/src
+  #git checkout master
+  #git pull
 
-  git checkout $golang_commit
+  #git checkout $golang_commit
 
-  git branch -D ${run_name} || true
-  git checkout -b ${run_name}
+  #git branch -D ${run_name} || true
+  #git checkout -b ${run_name}
 
 
-  for commit in $(echo $golang_revert_commits | tr "," "\n"); do
-    echo "Reverting commig $commit"
-    git revert $commit --no-edit
-  done
+  #for commit in $(echo $golang_revert_commits | tr "," "\n"); do
+  #  echo "Reverting commig $commit"
+  #  git revert $commit --no-edit
+  #done
 
-  for patch in $(echo $golang_patches | tr "," "\n"); do
-    IFS=: read cl_id revision <<< $patch
-    echo "Applying patch $cl_id revision $revision"
-    apply_patch $cl_id $revision
-  done
+  #for patch in $(echo $golang_patches | tr "," "\n"); do
+  #  IFS=: read cl_id revision <<< $patch
+  #  echo "Applying patch $cl_id revision $revision"
+  #  apply_patch $cl_id $revision
+  #done
 
 
   ./make.bash

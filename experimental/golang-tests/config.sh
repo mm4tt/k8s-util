@@ -4,16 +4,6 @@
 # Things to change for every run
 ###
 
-# This name will be used in grafana as datasource name (and many other places).
-# KEEP THE RUN NAMES UNIQUE!
-run_name=golang-xxx
-
-golang_commit=master
-
-# Golang patches to apply in format: cl_id:revision separated by commas,
-# e.g. golang_patches=186598:3,186599:2
-golang_patches=""
-
 ###
 # Things that usually shouldn' be changed (unless k8s doesn't build)
 ###

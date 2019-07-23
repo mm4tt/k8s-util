@@ -4,12 +4,15 @@ set -euo pipefail
 
 if [ $# -ne 1 ]
   then
-    echo "Usage: ${0} <config>"
+    echo "Usage: ${0} <run_name>"
+    echo ""
+    echo "RUN NAMES SHOULD BE UNIQUE!"
     exit 1
 fi
 
+run_name={$1?}
 
-config=${1:-$GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/config.sh}
+config=${2:-$GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/config.sh}
 echo "Loading config: $config"
 source $config
 source $GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/util.sh
