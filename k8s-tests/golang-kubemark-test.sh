@@ -1,9 +1,8 @@
 #!/bin/bash
 
-set -e
-set -E
+set -euo pipefail
 
-log() { echo $1 | ts; }
+log() { echo $1 | ts | tee -a ${log_file}; }
 
 
 build_k8s() {
@@ -21,15 +20,17 @@ build_k8s() {
   git add .
   git commit -a -m "Update golang version for run ${run_name}"
 
-  make build | ts
+  make build
 
   cd -
-  make quick-release | ts
+  make quick-release
 }
 
 apply_patch() {
  cl_id=${1?}
  revision=${2?}
+
+ echo "Applying patch ${cl_id} at revision ${revision}"
 
  wget https://go-review.googlesource.com/changes/go~${cl_id}/revisions/${revision}/patch?zip -O patch.zip
  unzip patch.zip && rm patch.zip
@@ -40,19 +41,21 @@ apply_patch() {
 }
 
 build_golang() {
-  log "Building golang for $run_name"
+  echo "Building golang for $run_name"
 
   cd ~/golang/go/src
   git checkout master
   git pull
 
+  git checkout 7b62e98
+
   git branch -D ${run_name} || true
   git checkout -b ${run_name}
-  git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
 
-  apply_patch 186598 3
+  #git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
+  #apply_patch 186598 3
 
-  ./make.bash | ts
+  ./make.bash
 
   cd -
 }
@@ -67,14 +70,22 @@ fi
 run_name=${1?}
 num_nodes=${2?}
 
-k8s_branch=golang_kubemark_932487c7440b05
+log_dir=~/log/k8s-tests/${run_name}
+mkdir -p ${log_dir}
+log_file=${log_dir}/log_$(date +%Y%m%d_%H%M%S)
+
+log "Running the ${run_name} test with ${num_nodes} nodes"
+
+k8s_branch=golang_kubemark_932487c7440b05_no_patches
 perf_test_branch=golang1.13
 test_infra_commit=63eb09459
 
-build_golang
-build_k8s
 
-log "Running the golang kubemark test with ${num_nodes} nodes"
+#build_golang 2>&1 | ts | tee -a ${log_file}
+#build_k8s 2>&1 | ts | tee -a ${log_file}
+make clean quick-release
+
+
 log "k8s.io/perf-tests branch is: $perf_test_branch"
 log "k8s.io/test-infra commit is: $test_infra_commit"
 
@@ -121,4 +132,4 @@ go run hack/e2e.go -- \
     --test-cmd-args=--tear-down-prometheus-server=true \
     --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
     --test-cmd-args=--testoverrides=./testing/load/kubemark/throughput_override.yaml \
-    --test-cmd-name=ClusterLoaderV2 2>&1 | ts
+    --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}
