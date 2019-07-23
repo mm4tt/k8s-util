@@ -4,6 +4,7 @@ set -euo pipefail
 
 prom_instance_name=${1?}
 snapshot_name=${2?}
+
 disk_name=${3:-$snapshot_name}
 
 echo "Creating disk ${disk_name}"

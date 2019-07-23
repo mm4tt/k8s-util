@@ -2,94 +2,25 @@
 
 set -euo pipefail
 
-if [ $# -ne 2 ]
+if [ $# -ne 1 ]
   then
-    echo "Usage: ${0} <run-name> <num-nodes>"
+    echo "Usage: ${0} <config>"
     exit 1
 fi
 
-run_name=${1?}
-golang_commit=
-num_nodes=${2:-2500}
 
-log() { echo $1 | ts | tee -a ${log_file}; }
-
-
-apply_patch() {
- cl_id=${1?}
- revision=${2?}
-
- echo "Applying patch ${cl_id} at revision ${revision}"
-
- wget https://go-review.googlesource.com/changes/go~${cl_id}/revisions/${revision}/patch?zip -O patch.zip
- unzip patch.zip && rm patch.zip
- git apply --3way *.diff
- rm *.diff
- git add .
- git commit -a -m "Applied ${cl_id} revision ${revision}"
-}
-
-build_golang() {
-  echo "Building golang for $run_name"
-
-  cd ~/golang/go/src
-  git checkout master
-  git pull
-
-  git checkout 7b62e98
-
-  git branch -D ${run_name} || true
-  git checkout -b ${run_name}
-
-
-  #git revert f1a8ca30fcaa91803c353999448f6f3a292f1db1 --no-edit
-  #apply_patch 186598 3
-
-  ./make.bash
-
-  cd -
-}
-
-build_k8s() {
-  log "Building k8s"
-
-  cd $GOPATH/src/k8s.io/kubernetes
-  git checkout $k8s_branch
-
-  cd build/build-image/cross/
-  rm -rf go || true
-  cp -R ~/golang/go/ go
-
-  echo "$run_name" > VERSION
-
-  git add .
-  git commit -a -m "Update golang version for run ${run_name}"
-
-  make build
-
-  cd -
-  make clean quick-release
-}
-
-
-log_dir=~/log/${run_name}
-mkdir -p ${log_dir}
-log_file=${log_dir}/log_$(date +%Y%m%d_%H%M%S)
+config=${1:-$GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/config.sh}
+echo "Loading config: $config"
+source $config
+source $GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/util.sh
 
 log "Running the ${run_name} test with ${num_nodes} nodes"
-
-k8s_branch=golang_kubemark_932487c7440b05_no_patches
-perf_test_branch=golang1.13
-test_infra_commit=63eb09459
-
 
 build_golang 2>&1 | ts | tee -a ${log_file}
 build_k8s 2>&1 | ts | tee -a ${log_file}
 
-
 log "k8s.io/perf-tests branch is: $perf_test_branch"
 log "k8s.io/test-infra commit is: $test_infra_commit"
-
 
 go install k8s.io/test-infra/kubetest
 
@@ -134,3 +65,6 @@ go run hack/e2e.go -- \
     --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
     --test-cmd-args=--testoverrides=./testing/load/kubemark/throughput_override.yaml \
     --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}
+
+
+$GOPATH/src/github.com/mm4tt/k8s-util/experimental/prometheus/add-snapshot.sh grafana $run_name
