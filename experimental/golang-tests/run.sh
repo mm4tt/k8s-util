@@ -53,7 +53,6 @@ go run hack/e2e.go -- \
     --kubemark-nodes=$num_nodes \
     --check-version-skew=false \
     --up \
-    --down \
     --test=false \
     --test-cmd=$GOPATH/src/k8s.io/perf-tests/run-e2e.sh \
     --test-cmd-args=cluster-loader2 \
