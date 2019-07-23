@@ -9,9 +9,9 @@
 run_name=golang-xxx
 
 golang_commit=master
+
 # Golang patches to apply in format: cl_id:revision separated by commas,
 # e.g. golang_patches=186598:3,186599:2
-
 golang_patches=""
 
 ###

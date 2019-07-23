@@ -72,3 +72,6 @@ build_k8s() {
   make clean quick-release
 }
 
+verify_run_name() {
+ echo "$run_name" | grep -Po "^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$" 1>/dev/null || echo "Invalid run name: '$run_name', doesn't match ^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$" && exit 1
+}

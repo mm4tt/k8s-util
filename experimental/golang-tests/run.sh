@@ -14,6 +14,8 @@ echo "Loading config: $config"
 source $config
 source $GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/util.sh
 
+verify_run_name
+
 log "Running the ${run_name} test with ${num_nodes} nodes"
 
 build_golang 2>&1 | ts | tee -a ${log_file}
