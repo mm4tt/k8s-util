@@ -73,5 +73,8 @@ build_k8s() {
 }
 
 verify_run_name() {
- echo "$run_name" | grep -Po "^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$" 1>/dev/null || echo "Invalid run name: '$run_name', doesn't match ^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$" && exit 1
+ if ! echo "$run_name" | grep -Po "^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$" 1>/dev/null; then
+   echo "Invalid run name: '$run_name', doesn't match ^(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?)$"
+   exit 1
+ fi
 }
