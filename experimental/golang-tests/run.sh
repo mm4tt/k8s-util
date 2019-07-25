@@ -10,7 +10,7 @@ if [ $# -ne 1 ]
     exit 1
 fi
 
-run_name={$1?}
+run_name=${1?}
 
 config=${2:-$GOPATH/src/github.com/mm4tt/k8s-util/experimental/golang-tests/config.sh}
 echo "Loading config: $config"
@@ -29,7 +29,8 @@ log "k8s.io/test-infra commit is: $test_infra_commit"
 
 go install k8s.io/test-infra/kubetest
 
-cd ~/go/src/k8s.io/perf-tests && git checkout ${perf_test_branch} && cd -
+cd ~/go/src/k8s.io/perf-tests && git checkout ${perf_test_branch}
+cd $GOPATH/src/k8s.io/kubernetes
 
 source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-common ${test_infra_commit}
 source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-gce-scale ${test_infra_commit}
