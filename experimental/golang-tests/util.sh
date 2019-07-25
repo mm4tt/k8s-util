@@ -40,7 +40,7 @@ build_k8s() {
   echo "$run_name" > VERSION
 
   git add .
-  git commit -a -m "Update golang version for run ${run_name}"
+  git commit -a -m "Update golang version for run ${run_name}" || true
 
   make build
 
