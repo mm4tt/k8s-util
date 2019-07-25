@@ -46,7 +46,8 @@ export KUBE_GCE_NETWORK=${CLUSTER}
 export INSTANCE_PREFIX=${CLUSTER}
 export KUBE_GCE_INSTANCE_PREFIX=${CLUSTER}
 
-go run hack/e2e.go -- \
+retval=0
+if ! go run hack/e2e.go -- \
     --gcp-project=$PROJECT \
     --gcp-zone=$ZONE \
     --cluster=$CLUSTER \
@@ -69,7 +70,13 @@ go run hack/e2e.go -- \
     --test-cmd-args=--tear-down-prometheus-server=true \
     --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
     --test-cmd-args=--testoverrides=./testing/load/kubemark/throughput_override.yaml \
-    --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}
+    --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}; then
+  retval=1
+fi
 
 
-$GOPATH/src/github.com/mm4tt/k8s-util/experimental/prometheus/add-snapshot.sh grafana $run_name
+$GOPATH/src/github.com/mm4tt/k8s-util/experimental/prometheus/add-snapshot.sh grafana $run_name || true
+
+cd ~/golang/go
+
+exit $retval
