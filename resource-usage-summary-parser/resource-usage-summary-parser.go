@@ -16,7 +16,7 @@ import (
 )
 
 var (
-	resourceUsageSummaryPath = flag.String("resource-usage-summary-path", "", "Path to the resource usage summary path")
+	resourceUsageSummaryPath = flag.String("summary-path", "", "Path to the resource usage summary path")
 	namePattern              = flag.String("name-pattern", "", "Pattern (substring) of the component to analyze")
 )
 
