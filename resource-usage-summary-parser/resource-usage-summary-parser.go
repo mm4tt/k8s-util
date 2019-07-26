@@ -79,14 +79,17 @@ func computeSummary(jsonMap map[string]interface{}, namePattern string) error {
 				mems = append(mems, m["Mem"].(float64))
 			}
 		}
-
 		sort.Float64s(cpus)
 		sort.Float64s(mems)
-
-		cpu := cpus[pctl*len(cpus)/100-1]
-		mem := mems[pctl*len(mems)/100-1]
-
-		klog.Infof("%d: Cpu: %f, Mem: %f\n", pctl, cpu, mem)
+		klog.Infof("%d: Cpu: %f, Mem: %f\n", pctl, pctlVal(pctl, cpus), pctlVal(pctl, mems))
 	}
 	return nil
+}
+
+func pctlVal(pctl int, vals []float64) float64 {
+	i := pctl*len(vals)/100-1
+	if i < 0 {
+		i = 0
+	}
+	return vals[i]
 }
