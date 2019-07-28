@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -euo pipefail
+
 if [ $# -ne 2 ]
   then
     echo "Usage: ${0} <cluster_name> <num_fake_nodes>"
@@ -29,7 +31,8 @@ if [[ $num_fake_nodes -ge 1000 ]]; then
 fi
 
 go install k8s.io/test-infra/kubetest
-go run $GOPATH/src/k8s.io/kubernetes/hack/e2e.go -- \
+cd $GOPATH/src/k8s.io/kubernetes
+go run hack/e2e.go -- \
     --gcp-project=$PROJECT \
     --gcp-zone=$ZONE \
     --gcp-node-size=n1-standard-$node_size \
@@ -38,3 +41,4 @@ go run $GOPATH/src/k8s.io/kubernetes/hack/e2e.go -- \
     --kubemark \
     --kubemark-nodes=$num_fake_nodes \
     --up
+cd -
