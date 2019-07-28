@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-proxy
+  namespace: kube-system
+  labels:
+    k8s-app: kube-proxy
+spec:
+  selector:
+    matchLabels:
+      tier: node
+      component: kube-proxy
+  template:
+    metadata:
+      name: kube-proxy
+      labels:
+        tier: node
+        component: kube-proxy
+    spec:
+      priorityClassName: system-node-critical
+      hostNetwork: true
+      tolerations:
+        - operator: "Exists"
+          effect: "NoExecute"
+        - operator: "Exists"
+          effect: "NoSchedule"
+      containers:
+        - name: kube-proxy
+          image: k8s.gcr.io/kube-proxy-amd64:lastest
+          resources:
+            requests:
+              cpu: 100m
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: metadata-proxy
+  namespace: kube-system
+  labels:
+    k8s-app: kube-proxy
+spec:
+  selector:
+    matchLabels:
+      tier: node
+      component: kube-proxy
+  template:
+    metadata:
+      name: kube-proxy
+      labels:
+        tier: node
+        component: kube-proxy
+    spec:
+      priorityClassName: system-node-critical
+      hostNetwork: true
+      tolerations:
+        - operator: "Exists"
+          effect: "NoExecute"
+        - operator: "Exists"
+          effect: "NoSchedule"
+      containers:
+        - name: kube-proxy
+          image: k8s.gcr.io/kube-proxy-amd64:lastest
+          resources:
+            requests:
+              cpu: 100m
