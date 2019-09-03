@@ -30,7 +30,6 @@ if [[ $num_fake_nodes -ge 1000 ]]; then
   source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-gce-scale
 fi
 
-go install k8s.io/test-infra/kubetest
 cd $GOPATH/src/k8s.io/kubernetes
 go run hack/e2e.go -- \
     --gcp-project=$PROJECT \
