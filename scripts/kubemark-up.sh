@@ -18,7 +18,7 @@ fi
 
 num_nodes=$((13*$num_fake_nodes/100/$node_size+2))
 
-echo "Node size: $node_size, num_nodes: $num_nodes"
+echo "Node size: $node_size vCPU, num_nodes: $num_nodes"
 
 export CLUSTER=$cluster_name
 export KUBE_GCE_NETWORK=${CLUSTER}
@@ -40,4 +40,7 @@ go run hack/e2e.go -- \
     --kubemark \
     --kubemark-nodes=$num_fake_nodes \
     --up
+    --test=false
+    --test_args=--ginkgo.focus=XXX
+
 cd -
