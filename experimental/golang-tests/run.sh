@@ -45,8 +45,6 @@ export KUBE_GCE_NETWORK=${CLUSTER}
 export INSTANCE_PREFIX=${CLUSTER}
 export KUBE_GCE_INSTANCE_PREFIX=${CLUSTER}
 
-export GODEBUG=gctrace=1
-
 cd $GOPATH/src/k8s.io/kubernetes
 
 retval=0
