@@ -56,9 +56,6 @@ verify_run_name() {
 }
 
 run_kubemark() {
-  export PROJECT=mmatejczyk-gke-dev
-  export ZONE=us-east1-b
-
   go run hack/e2e.go -- \
       --gcp-project=$PROJECT \
       --gcp-zone=$ZONE \
@@ -87,9 +84,6 @@ run_kubemark() {
 }
 
 run_full() {
-  export PROJECT=k8s-scale-testing-2
-  export ZONE=us-central1-b
-
   go run hack/e2e.go -- \
       --gcp-project=$PROJECT \
       --gcp-zone=$ZONE \
