@@ -45,6 +45,8 @@ export KUBE_GCE_INSTANCE_PREFIX=${CLUSTER}
 cd $GOPATH/src/k8s.io/kubernetes
 
 log "Go version is: $(go version)"
+
+log "Starting test..."
 retval=0
 if ! ($test_to_run); then
   retval=1
