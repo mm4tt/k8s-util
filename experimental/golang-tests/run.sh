@@ -46,7 +46,7 @@ export GODEBUG=gctrace=1
 
 cd $GOPATH/src/k8s.io/kubernetes
 
-log "Go version is: $(go version)
+log "Go version is: $(go version)"
 retval=0
 if ! ($test_to_run); then
   retval=1
