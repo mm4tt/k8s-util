@@ -1,7 +1,11 @@
 #!/bin/bash
 
-
+export PROJECT=k8s-scale-testing-2
+export ZONE=us-central1-b
 test_to_run=run_full
+
+#export PROJECT=mmatejczyk-gke-dev
+#export ZONE=us-east1-b
 #test_to_run=run_kubemark
 
 build_k8s=true
