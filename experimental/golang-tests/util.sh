@@ -54,3 +54,64 @@ verify_run_name() {
    exit 1
  fi
 }
+
+run_kubemark() {
+  export PROJECT=mmatejczyk-gke-dev
+  export ZONE=us-east1-b
+
+  go run hack/e2e.go -- \
+      --gcp-project=$PROJECT \
+      --gcp-zone=$ZONE \
+      --cluster=$CLUSTER \
+      --gcp-node-size=n1-standard-8 \
+      --gcp-nodes=50 \
+      --provider=gce \
+      --kubemark \
+      --kubemark-nodes=$num_nodes \
+      --check-version-skew=false \
+      --up \
+      --down \
+      --test=false \
+      --test-cmd=$GOPATH/src/k8s.io/perf-tests/run-e2e.sh \
+      --test-cmd-args=cluster-loader2 \
+      --test-cmd-args=--enable-prometheus-server=true \
+      --test-cmd-args=--experimental-gcp-snapshot-prometheus-disk=true \
+      --test-cmd-args=--experimental-prometheus-disk-snapshot-name="${run_name}" \
+      --test-cmd-args=--nodes=$num_nodes \
+      --test-cmd-args=--provider=kubemark \
+      --test-cmd-args=--report-dir=/tmp/${run_name}/artifacts \
+      --test-cmd-args=--tear-down-prometheus-server=true \
+      --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
+      --test-cmd-args=--testoverrides=./testing/load/kubemark/throughput_override.yaml \
+      --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}
+}
+
+run_full() {
+  export PROJECT=k8s-scale-testing
+  export ZONE=us-east1-b
+
+  go run hack/e2e.go -- \
+      --gcp-project=$PROJECT \
+      --gcp-zone=$ZONE \
+      --cluster=$CLUSTER \
+      --gcp-node-size=n1-standard-1 \
+      --gcp-nodes=5000 \
+      --provider=gce \
+      --check-version-skew=false \
+      --up \
+      --down \
+      --test=false \
+      --test-cmd=$GOPATH/src/k8s.io/perf-tests/run-e2e.sh \
+      --test-cmd-args=cluster-loader2 \
+      --test-cmd-args=--enable-prometheus-server=true \
+      --test-cmd-args=--experimental-gcp-snapshot-prometheus-disk=true \
+      --test-cmd-args=--experimental-prometheus-disk-snapshot-name="${run_name}" \
+      --test-cmd-args=--nodes=5000 \
+      --test-cmd-args=--provider=gce \
+      --test-cmd-args=--report-dir=/tmp/${run_name}/artifacts \
+      --test-cmd-args=--tear-down-prometheus-server=true \
+      --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
+      --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/density/config.yaml \
+      --test-cmd-args=--testoverrides=./testing/density/5000_nodes/override.yaml \
+      --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}
+}

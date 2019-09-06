@@ -1,8 +1,10 @@
 #!/bin/bash
 
-###
-# Things to change for every run
-###
+
+test_to_run=run_full
+#test_to_run=run_kubemark
+
+build_k8s=true
 
 ###
 # Things that usually shouldn' be changed (unless k8s doesn't build)
