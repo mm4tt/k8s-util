@@ -87,8 +87,8 @@ run_kubemark() {
 }
 
 run_full() {
-  export PROJECT=k8s-scale-testing
-  export ZONE=us-east1-b
+  export PROJECT=k8s-scale-testing-2
+  export ZONE=us-central1-b
 
   go run hack/e2e.go -- \
       --gcp-project=$PROJECT \
