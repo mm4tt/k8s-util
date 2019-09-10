@@ -14,7 +14,10 @@ build_k8s=true
 # Things that usually shouldn' be changed (unless k8s doesn't build)
 ###
 
-k8s_branch=golang_kubemark_932487c7440b05_no_patches
+
+k8s_branch=godebug_932487c7440b05
+#k8s_branch=godebug_932487c7440b05_baseline
+#k8s_branch=golang_kubemark_932487c7440b05_no_patches
 # Some newer golang commits require some patches to build k8s, if k8s stops building, uncomment the line below.
 #k8s_branch=golang_kubemark_932487c7440b05
 
