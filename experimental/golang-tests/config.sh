@@ -9,6 +9,7 @@ test_to_run=run_full
 #test_to_run=run_kubemark
 
 build_k8s=true
+down=true
 
 ###
 # Things that usually shouldn' be changed (unless k8s doesn't build)
@@ -27,3 +28,11 @@ k8s_branch=godebug_932487c7440b05
 num_nodes=2500
 perf_test_branch=golang1.13
 test_infra_commit=63eb09459
+
+
+### Extra logic
+
+kubetest_extra_args=""
+if $down; then
+  kubetest_extra_args=" --down "
+fi

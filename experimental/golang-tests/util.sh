@@ -70,7 +70,7 @@ run_kubemark() {
       --kubemark-nodes=$num_nodes \
       --check-version-skew=false \
       --up \
-      --down \
+      "${kubetest_extra_args}" \
       --test=false \
       --test-cmd=$GOPATH/src/k8s.io/perf-tests/run-e2e.sh \
       --test-cmd-args=cluster-loader2 \
@@ -98,7 +98,7 @@ run_full() {
       --provider=gce \
       --check-version-skew=false \
       --up \
-      --down \
+      "${kubetest_extra_args}" \
       --test=false \
       --test-cmd=$GOPATH/src/k8s.io/perf-tests/run-e2e.sh \
       --test-cmd-args=cluster-loader2 \
