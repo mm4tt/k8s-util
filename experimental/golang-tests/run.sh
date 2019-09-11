@@ -31,8 +31,6 @@ go install k8s.io/test-infra/kubetest
 cd ~/go/src/k8s.io/perf-tests && git checkout ${perf_test_branch}
 cd $GOPATH/src/k8s.io/kubernetes
 
-source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-common ${test_infra_commit}
-source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-gce-scale ${test_infra_commit}
 
 export HEAPSTER_MACHINE_TYPE=n1-standard-32
 export KUBE_DNS_MEMORY_LIMIT=300Mi

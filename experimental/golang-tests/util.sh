@@ -56,6 +56,9 @@ verify_run_name() {
 }
 
 run_kubemark() {
+  source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-common ${test_infra_commit}
+  source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-kubemark-gce-scale ${test_infra_commit}
+
   go run hack/e2e.go -- \
       --gcp-project=$PROJECT \
       --gcp-zone=$ZONE \
@@ -84,6 +87,8 @@ run_kubemark() {
 }
 
 run_full() {
+  source $GOPATH/src/github.com/mm4tt/k8s-util/set-common-envs/set-common-envs.sh preset-e2e-scalability-common ${test_infra_commit}
+
   go run hack/e2e.go -- \
       --gcp-project=$PROJECT \
       --gcp-zone=$ZONE \
