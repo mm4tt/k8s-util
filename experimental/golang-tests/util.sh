@@ -109,8 +109,8 @@ run_full() {
       --test-cmd-args=--provider=gce \
       --test-cmd-args=--report-dir=/tmp/${run_name}/artifacts \
       --test-cmd-args=--tear-down-prometheus-server=true \
-      --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
       --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/density/config.yaml \
+      --test-cmd-args=--testconfig=$GOPATH/src/k8s.io/perf-tests/clusterloader2/testing/load/config.yaml \
       --test-cmd-args=--testoverrides=./testing/density/5000_nodes/override.yaml \
       --test-cmd-name=ClusterLoaderV2 2>&1 | ts | tee -a ${log_file}
 }
