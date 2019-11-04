@@ -39,8 +39,8 @@ go run hack/e2e.go -- \
     --provider=gce \
     --kubemark \
     --kubemark-nodes=$num_fake_nodes \
-    --up
-    --test=false
-    --test_args=--ginkgo.focus=XXX
+    --up \
+    --test=false \
+    --test-cmd=/bin/true
 
 cd -
