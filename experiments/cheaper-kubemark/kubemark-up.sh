@@ -6,7 +6,7 @@ cluster_name=mmat-cheaper-kubemark
 
 num_fake_nodes=5000
 node_size=8
-num_nodes=54
+num_nodes=63
 
 echo "Node size: $node_size vCPU, num_nodes: $num_nodes"
 
@@ -27,8 +27,8 @@ go run hack/e2e.go -- \
     --provider=gce \
     --kubemark \
     --kubemark-nodes=$num_fake_nodes \
-    --up
-    --test=false
+    --up \
+    --test=false \
     --test-cmd=/bin/true
 
 cd -
