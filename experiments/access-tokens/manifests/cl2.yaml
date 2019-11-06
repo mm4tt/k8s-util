@@ -1,0 +1,130 @@
+# Test will create a pod per single serviceAccount.
+# A pod will send requests for each token under the service account.
+
+# Targeting 1000 tokens with 100 total QPS per namespace
+{{$serviceAccounts := 40}}
+{{$tokensPerServiceAccount := 25}}
+{{$qpsPerToken := 0.1}}
+# Total 10K tokens with 1K QPS
+{{$namespaces := 10}}
+
+
+name: access-tokens
+automanagedNamespaces: {{$namespaces}}
+tuningSets:
+  - name: Sequence
+    parallelismLimitedLoad:
+      parallelismLimit: 1
+steps:
+- name: Starting measurements
+  measurements:
+    - Identifier: APIResponsivenessPrometheus
+      Method: APIResponsivenessPrometheus
+      Params:
+        action: start
+
+- name: Creating ServiceAccounts
+  phases:
+    - namespaceRange:
+        min: 1
+        max: {{$namespaces}}
+      replicasPerNamespace: 1
+      tuningSet: Sequence
+      objectBundle:
+        - basename: service-account-getter
+          objectTemplatePath: role.yaml
+    - namespaceRange:
+        min: 1
+        max: {{$namespaces}}
+      replicasPerNamespace: {{$serviceAccounts}}
+      tuningSet: Sequence
+      objectBundle:
+        - basename: account
+          objectTemplatePath: serviceAccount.yaml
+        - basename: account
+          objectTemplatePath: roleBinding.yaml
+          templateFillMap:
+            RoleName: service-account-getter
+
+- name: Creating Tokens
+  phases:
+    {{range $i := Seq $serviceAccounts}}
+    - namespaceRange:
+        min: 1
+        max: {{$namespaces}}
+      replicasPerNamespace: {{$tokensPerServiceAccount}}
+      tuningSet: Sequence
+      objectBundle:
+        - basename: account-{{$i}}
+          objectTemplatePath: token.yaml
+    {{end}}
+
+
+- name: Starting measurement for waiting for pods
+  measurements:
+    - Identifier: WaitForRunningPods
+      Method: WaitForControlledPodsRunning
+      Params:
+        action: start
+        apiVersion: apps/v1
+        kind: Deployment
+        labelSelector: group = access-tokens
+        operationTimeout: 15m
+
+- name: Creating pods
+  phases:
+  - namespaceRange:
+      min: 1
+      max: {{$namespaces}}
+    replicasPerNamespace: {{$serviceAccounts}}
+    tuningSet: Sequence
+    objectBundle:
+    - basename: account
+      objectTemplatePath: deployment.yaml
+      templateFillMap:
+        QpsPerWorker: {{$qpsPerToken}}
+        Replicas: 1
+        Tokens: {{$tokensPerServiceAccount}}
+
+- name: Waiting for pods to be running
+  measurements:
+    - Identifier: WaitForRunningPods
+      Method: WaitForControlledPodsRunning
+      Params:
+        action: gather
+
+- name: Wait 5min
+  measurements:
+    - Identifier: Wait
+      Method: Sleep
+      Params:
+        duration: 5m
+
+- name: Deleting pods
+  phases:
+    - namespaceRange:
+        min: 1
+        max: {{$namespaces}}
+      replicasPerNamespace: 0
+      tuningSet: Sequence
+      objectBundle:
+        - basename: account
+          objectTemplatePath: deployment.yaml
+          templateFillMap:
+            QpsPerWorker: {{$qpsPerToken}}
+            Replicas: 1
+            Tokens: {{$tokensPerServiceAccount}}
+
+- name: Waiting for pods to be deleted
+  measurements:
+    - Identifier: WaitForRunningPods
+      Method: WaitForControlledPodsRunning
+      Params:
+        action: gather
+
+- name: Collecting measurements
+  measurements:
+    - Identifier: APIResponsivenessPrometheus
+      Method: APIResponsivenessPrometheus
+      Params:
+        action: gather

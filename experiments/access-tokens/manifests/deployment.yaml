@@ -1,0 +1,44 @@
+{{$name := .Name}}
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{.Name}}
+  labels:
+    group: access-tokens
+spec:
+  selector:
+    matchLabels:
+      group: access-tokens
+      name: {{.Name}}
+  replicas: {{.Replicas}}
+  template:
+    metadata:
+      labels:
+        group: access-tokens
+        name: {{.Name}}
+    spec:
+      containers:
+        - name: access-tokens
+          image: gcr.io/mmatejczyk-gke-dev/access-tokens:v0.0.4
+          args:
+          {{range $tokenId := Seq .Tokens}}
+            - --acess-token-dirs=/var/tokens/{{$name}}-{{$tokenId}}
+          {{end}}
+            - --namespace={{.Namespace}}
+            - --qps-per-worker={{.QpsPerWorker}}
+          resources:
+            limits:
+              cpu: {{MultiplyInt .Tokens 10}}m # 10mCpu per Token
+              memory: {{AddInt 50 (MultiplyInt .Tokens 5)}}Mi
+          volumeMounts:
+          {{range $j := Seq .Tokens}}
+          - name: {{$name}}-{{$j}}
+            mountPath: /var/tokens/{{$name}}-{{$j}}
+          {{end}}
+      volumes:
+      {{range $j := Seq .Tokens}}
+      - name: {{$name}}-{{$j}}
+        secret:
+          secretName: {{$name}}-{{$j}}
+      {{end}}
