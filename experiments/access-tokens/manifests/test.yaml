@@ -1,0 +1,67 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tokens
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: account-1
+  namespace: tokens
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: account1-view
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+  - kind: ServiceAccount
+    name: account-1
+    namespace: tokens
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: account-1-token-1
+  namespace: tokens
+  annotations:
+    kubernetes.io/service-account.name: account-1
+type: kubernetes.io/service-account-token
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: tokens
+  name: access-tokens
+  labels:
+    app: access-tokens
+spec:
+  selector:
+    matchLabels:
+      app: access-tokens
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: access-tokens
+    spec:
+      containers:
+        - name: access-tokens
+          image: gcr.io/mmatejczyk-gke-dev/access-tokens:v0.0.1
+          args:
+            - --acess-token-dirs=/var/tokens/account-1-token-1
+            - --qps-per-worker=1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          volumeMounts:
+            - name: account-1-token-1
+              mountPath: /var/tokens/account-1-token-1
+      volumes:
+        - name: account-1-token-1
+          secret:
+            secretName: account-1-token-1
