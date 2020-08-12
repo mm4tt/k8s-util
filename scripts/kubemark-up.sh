@@ -31,7 +31,7 @@ if [[ $num_fake_nodes -ge 1000 ]]; then
 fi
 
 cd $GOPATH/src/k8s.io/kubernetes
-go run hack/e2e.go -- \
+kubetest \
     --gcp-project=$PROJECT \
     --gcp-zone=$ZONE \
     --gcp-node-size=n1-standard-$node_size \
