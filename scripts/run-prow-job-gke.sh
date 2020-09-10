@@ -10,6 +10,7 @@ job_name=${1?}
 
 export KUBECONFIG=$HOME/kubeconfigs/scalability_prow
 
+unset CLOUDSDK_API_ENDPOINT_OVERRIDES_CONTAINER 
 gcloud container clusters --project=gke-scalability-prow get-credentials prow --region=us-central1
 
 cd $GOPATH/src/k8s.io/test-infra
