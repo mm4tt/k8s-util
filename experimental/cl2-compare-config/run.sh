@@ -46,7 +46,8 @@ echo "Dumping config steps for PR $pr_num"
 cd "$tmp_dir/config/perf-tests"
 git checkout "pr$pr_num"
 cd "$tmp_dir/cl2/perf-tests/clusterloader2"
-run_cl2cd "$tmp_dir" && mv steps.yaml "pr$pr_num-steps.yaml"
+run_cl2
+cd "$tmp_dir" && mv steps.yaml "pr$pr_num-steps.yaml"
 
 echo "Master config dumped in $tmp_dir/master-steps.yaml"
 echo "PR $pr_num config dumped in $tmp_dir/pr$pr_num-steps.yaml"
