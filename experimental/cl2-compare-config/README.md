@@ -8,7 +8,7 @@ list of executable steps.
 ## How to install
 
 ```
-go get -d github.com/mm4tt/k8s-util/experimental/cl2-compare-config
+go get -d -u github.com/mm4tt/k8s-util/experimental/cl2-compare-config
 ```
 
 ## How to run
