@@ -24,11 +24,10 @@ echo "Cloning mm4tt's cl2 copy for dumping test config"
 cd "$tmp_dir"
 mkdir cl2 && cd cl2
 git clone --single-branch --branch dump_cl2_steps https://github.com/mm4tt/perf-tests.git
-cd perf-tests/clusterloader2
 
 run_cl2() {
   go run cmd/clusterloader.go \
-  --testconfig testing/load/config.yaml \
+  --testconfig "$tmp_dir/config/perf-tests/clusterloader2/testing/load/config.yaml" \
   --report-dir="$tmp_dir" \
   --provider=gce \
   --kubeconfig=/dev/null \
@@ -53,7 +52,7 @@ echo "Master config dumped in $tmp_dir/master-steps.yaml"
 echo "PR $pr_num config dumped in $tmp_dir/pr$pr_num-steps.yaml"
 
 cd "$tmp_dir"
-diff  master-steps.yaml "pr$pr_num-steps.yaml" > diff
+diff  master-steps.yaml "pr$pr_num-steps.yaml" > diff || true
 
 echo "Diff stored in $tmp_dir/diff"
 echo "Diff is:"
