@@ -41,6 +41,7 @@ kubetest \
     --kubemark-nodes=$num_fake_nodes \
     --up \
     --test=false \
-    --test-cmd=/bin/true
+    --test-cmd=/bin/true \
+    --down=false
 
 cd -
